@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "updated": "2025-01-01",
+  "description": "Индекс PKM для быстрого поиска контекста",
+  "context_files": [
+    {
+      "path": "memory/context/facts.md",
+      "type": "permanent",
+      "description": "Постоянный контекст — всегда загружать"
+    }
+  ],
+  "skills": [
+    {
+      "path": "skills/writing/SKILL.md",
+      "tags": ["writing", "text", "docs"]
+    },
+    {
+      "path": "skills/coding/SKILL.md",
+      "tags": ["code", "programming", "dev"]
+    },
+    {
+      "path": "skills/research/SKILL.md",
+      "tags": ["research", "analysis", "search"]
+    }
+  ],
+  "agents": [
+    {
+      "path": "agents/prompts/default-assistant.md",
+      "name": "default",
+      "description": "Основной ассистент с памятью"
+    }
+  ]
+}
