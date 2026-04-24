@@ -1,0 +1,29 @@
+# IDE / Editor (машинно-специфичное)
+.claude/settings.local.json
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Временные файлы
+*.tmp
+*.bak
+*.swp
+*~
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# Бэкапы от sync.ps1 -Backup (если вдруг окажутся внутри репо)
+pkm-backups/
+
+# Логи
+*.log
