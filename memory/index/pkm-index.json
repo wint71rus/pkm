@@ -1,6 +1,6 @@
 {
-  "version": "1.0",
-  "updated": "2025-01-01",
+  "version": "1.1",
+  "updated": "2026-04-24",
   "description": "Индекс PKM для быстрого поиска контекста",
   "context_files": [
     {
@@ -11,16 +11,16 @@
   ],
   "skills": [
     {
-      "path": "skills/writing/SKILL.md",
-      "tags": ["writing", "text", "docs"]
+      "path": "skills/automation/SKILL.md",
+      "tags": ["automation", "n8n", "ai-agents", "ollama"]
     },
     {
-      "path": "skills/coding/SKILL.md",
-      "tags": ["code", "programming", "dev"]
+      "path": "skills/networking/SKILL.md",
+      "tags": ["networking", "cisco", "vlan", "asterisk", "voip", "telephony"]
     },
     {
-      "path": "skills/research/SKILL.md",
-      "tags": ["research", "analysis", "search"]
+      "path": "skills/webscraping/SKILL.md",
+      "tags": ["webscraping", "python", "parsing", "requests", "playwright"]
     }
   ],
   "agents": [

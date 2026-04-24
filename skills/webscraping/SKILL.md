@@ -1,4 +1,4 @@
-# SKILL.md: Web Scraping & Search
+# SKILL: Web Scraping
 
 ## Когда использовать
 Задачи по парсингу сайтов, сбору данных, автоматическому поиску информации.
@@ -28,7 +28,7 @@ from bs4 import BeautifulSoup
 
 # Заголовки чтобы сайт не блокировал
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 }
 
 # Скачиваем страницу
@@ -39,21 +39,23 @@ response.encoding = 'utf-8'  # важно для русских сайтов
 # Разбираем HTML
 soup = BeautifulSoup(response.text, 'lxml')
 
-# Найти элемент по тегу
-title = soup.find('h1').text.strip()
+# Найти элемент по тегу (безопасно — без падения, если тега нет)
+h1 = soup.find('h1')
+title = h1.text.strip() if h1 else ''
 
 # Найти элемент по классу CSS
-price = soup.find('span', class_='price').text.strip()
+price_tag = soup.find('span', class_='price')
+price = price_tag.text.strip() if price_tag else ''
 
 # Найти все ссылки на странице
 links = [a['href'] for a in soup.find_all('a', href=True)]
 
 # Найти таблицу и получить данные
 table = soup.find('table')
-rows = table.find_all('tr')
-for row in rows:
-    cells = [td.text.strip() for td in row.find_all('td')]
-    print(cells)
+if table:
+    for row in table.find_all('tr'):
+        cells = [td.text.strip() for td in row.find_all('td')]
+        print(cells)
 
 print(f"Заголовок: {title}")
 print(f"Цена: {price}")
@@ -66,7 +68,9 @@ from bs4 import BeautifulSoup
 import time
 import json
 
-headers = {'User-Agent': 'Mozilla/5.0'}
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+}
 results = []
 
 urls = [
@@ -75,17 +79,22 @@ urls = [
     "https://example.com/page/3",
 ]
 
+def safe_text(tag):
+    """Безопасно достать текст — вернёт '' если тег None."""
+    return tag.text.strip() if tag else ''
+
 for url in urls:
     try:
         response = requests.get(url, headers=headers, timeout=10)
+        response.encoding = 'utf-8'
         soup = BeautifulSoup(response.text, 'lxml')
 
         # Собираем данные
         items = soup.find_all('div', class_='item')
         for item in items:
             results.append({
-                'name': item.find('h2').text.strip(),
-                'price': item.find('span', class_='price').text.strip(),
+                'name': safe_text(item.find('h2')),
+                'price': safe_text(item.find('span', class_='price')),
                 'url': url
             })
 
@@ -144,8 +153,8 @@ with sync_playwright() as p:
 # Скачать страницу
 curl -s -A "Mozilla/5.0" "https://example.com" -o page.html
 
-# Найти все ссылки через grep
-curl -s "https://example.com" | grep -oP 'href="\K[^"]+' 
+# Найти все ссылки через grep (PCRE — нужен GNU grep; на Windows использовать Git Bash/WSL)
+curl -s "https://example.com" | grep -oP 'href="\K[^"]+'
 
 # Получить JSON от API
 curl -s "https://api.example.com/data" | python3 -m json.tool
@@ -203,6 +212,11 @@ with open('output.csv', 'w', newline='', encoding='utf-8-sig') as f:
 # pip install openpyxl
 import openpyxl
 
+data = [
+    {'name': 'Товар 1', 'price': '100', 'url': 'https://example.com/1'},
+    {'name': 'Товар 2', 'price': '200', 'url': 'https://example.com/2'},
+]
+
 wb = openpyxl.Workbook()
 ws = wb.active
 ws.append(['Название', 'Цена', 'URL'])
@@ -221,7 +235,7 @@ wb.save('output.xlsx')
 | Данные не найдены | Сайт на JavaScript — использовать Playwright |
 | Кириллица кракозябры | `response.encoding = 'utf-8'` |
 | Блокировка по IP | Добавить `time.sleep(1-3)` между запросами |
-| SSL ошибка | `requests.get(url, verify=False)` |
+| SSL ошибка | `requests.get(url, verify=False)` + `urllib3.disable_warnings()` |
 | Сайт требует авторизацию | Использовать сессию: `requests.Session()` |
 
 ## Чеклист перед парсингом

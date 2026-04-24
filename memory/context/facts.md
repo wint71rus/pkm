@@ -1,5 +1,7 @@
 # context/facts.md — Постоянная память Александра
 
+> Обновлено: 2026-04-24
+
 ## Профиль
 - Имя: Александр Манипов
 - Локация: Россия
@@ -21,7 +23,7 @@
 ## Инфраструктура
 - ПК: Windows, PowerShell
 - Сервер: Linux, домен webui.n8nwint.ru
-- Ollama на сервере: модель gemma4:9b (вспомогательная)
+- Ollama на сервере: модель gemma2:9b (вспомогательная) — проверить `ollama list`
 - Open WebUI: https://webui.n8nwint.ru
 - n8n: автоматизации на сервере
 - PKM: C:\pkm, синхронизация через GitHub (wint71rus/pkm)

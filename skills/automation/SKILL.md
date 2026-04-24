@@ -25,12 +25,19 @@ Schedule (каждые 5 мин)
 ```
 
 ### Запрос к Ollama API из n8n
+Работает в Code-ноде на Node.js 18+. Если n8n старее — используй встроенную HTTP Request ноду.
+
+OpenWebUI обычно требует Authorization-токен — возьми его в Settings → Account → API Keys.
+
 ```javascript
 const response = await fetch('https://webui.n8nwint.ru/ollama/api/chat', {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_TOKEN'  // токен из OpenWebUI
+  },
   body: JSON.stringify({
-    model: 'gemma3:9b',
+    model: 'gemma2:9b',
     messages: [
       { role: 'system', content: 'Ты помощник сисадмина. Кратко и по делу.' },
       { role: 'user', content: $input.item.json.message }
@@ -38,8 +45,13 @@ const response = await fetch('https://webui.n8nwint.ru/ollama/api/chat', {
     stream: false
   })
 });
+
+if (!response.ok) {
+  throw new Error(`Ollama API: ${response.status} ${await response.text()}`);
+}
+
 const data = await response.json();
-return { response: data.message.content };
+return { response: data.message?.content ?? 'пусто' };
 ```
 
 ## Идеи воркфлоу для сисадмина
