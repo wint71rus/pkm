@@ -1,6 +1,6 @@
 param([switch]$Setup,[switch]$Push,[switch]$Pull,[switch]$Backup,[switch]$Session)
 $PKM_DIR = "C:\pkm"
-$REMOTE_URL = "git@github.com:¬¿ÿ_ÀŒ√»Õ/pkm.git"
+$REMOTE_URL = "git@github.com:wint71rus/pkm.git"
 function log($msg)  { Write-Host "[PKM] $msg" -ForegroundColor Green }
 function warn($msg) { Write-Host "[PKM] $msg" -ForegroundColor Yellow }
 
