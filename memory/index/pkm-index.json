@@ -1,5 +1,5 @@
 {
-  "version": "1.1",
+  "version": "1.2",
   "updated": "2026-04-24",
   "description": "Индекс PKM для быстрого поиска контекста",
   "context_files": [
@@ -7,6 +7,32 @@
       "path": "memory/context/facts.md",
       "type": "permanent",
       "description": "Постоянный контекст — всегда загружать"
+    }
+  ],
+  "projects": [
+    {
+      "path": "projects/pkm-system/README.md",
+      "name": "PKM System",
+      "status": "active",
+      "tags": ["pkm", "git", "sync"]
+    },
+    {
+      "path": "projects/linux-learning/README.md",
+      "name": "Linux Learning",
+      "status": "active",
+      "tags": ["linux", "learning", "sysadmin"]
+    },
+    {
+      "path": "projects/n8n-automations/README.md",
+      "name": "n8n Automations",
+      "status": "active",
+      "tags": ["n8n", "automation", "workflows"]
+    },
+    {
+      "path": "projects/ollama-ai-integration/README.md",
+      "name": "Ollama / AI Integration",
+      "status": "active",
+      "tags": ["ollama", "ai", "llm", "open-webui"]
     }
   ],
   "skills": [
