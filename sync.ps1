@@ -1,6 +1,6 @@
-п»їparam([switch]$Setup,[switch]$Push,[switch]$Pull,[switch]$Backup,[switch]$Session)
+param([switch]$Setup,[switch]$Push,[switch]$Pull,[switch]$Backup,[switch]$Session)
 $PKM_DIR = "C:\pkm"
-$REMOTE_URL = ""
+$REMOTE_URL = "git@github.com:ВАШ_ЛОГИН/pkm.git"
 function log($msg)  { Write-Host "[PKM] $msg" -ForegroundColor Green }
 function warn($msg) { Write-Host "[PKM] $msg" -ForegroundColor Yellow }
 
@@ -10,29 +10,29 @@ function Setup-PKM {
         git init
         git add .
         git commit -m "init: PKM structure"
-        log "Git СЂРµРїРѕР·РёС‚РѕСЂРёР№ СЃРѕР·РґР°РЅ"
+        log "Git репозиторий создан"
     }
     $action  = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NonInteractive -File `"$PKM_DIR\sync.ps1`" -Push"
     $trigger = New-ScheduledTaskTrigger -RepetitionInterval (New-TimeSpan -Minutes 30) -Once -At (Get-Date)
     $settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Minutes 5)
     Register-ScheduledTask -TaskName "PKM-AutoSync" -Action $action -Trigger $trigger -Settings $settings -Force | Out-Null
-    log "Р“РѕС‚РѕРІРѕ! РђРІС‚РѕСЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ РєР°Р¶РґС‹Рµ 30 РјРёРЅ"
+    log "Готово! Автосинхронизация каждые 30 мин"
 }
 
 function Push-PKM {
     Set-Location $PKM_DIR
     $ts = Get-Date -Format "yyyy-MM-dd HH:mm"
     git add -A
-    if (-not (git status --porcelain)) { warn "РќРµС‚ РёР·РјРµРЅРµРЅРёР№"; return }
+    if (-not (git status --porcelain)) { warn "Нет изменений"; return }
     git commit -m "sync: $ts"
     if ($REMOTE_URL -ne "") { git push origin main 2>$null }
-    log "РЎРѕС…СЂР°РЅРµРЅРѕ: $ts"
+    log "Сохранено: $ts"
 }
 
 function Pull-PKM {
     Set-Location $PKM_DIR
     git pull origin main 2>$null
-    log "РџРѕР»СѓС‡РµРЅС‹ РѕР±РЅРѕРІР»РµРЅРёСЏ"
+    log "Получены обновления"
 }
 
 function Backup-PKM {
@@ -40,16 +40,16 @@ function Backup-PKM {
     New-Item -ItemType Directory -Force -Path $dir | Out-Null
     $name = "pkm-backup-$(Get-Date -Format 'yyyyMMdd-HHmm').zip"
     Compress-Archive -Path "$PKM_DIR\*" -DestinationPath "$dir\$name" -Force
-    log "Р‘СЌРєР°Рї: $dir\$name"
+    log "Бэкап: $dir\$name"
 }
 
 function New-Session {
     $date = Get-Date -Format "yyyy-MM-dd"
     $time = Get-Date -Format "HH-mm"
     $file = "$PKM_DIR\memory\sessions\$date-$time.md"
-    $content = "# РЎРµСЃСЃРёСЏ: $date $time`n`n## Р¦РµР»СЊ`n`n## Р РµС€РµРЅРёСЏ`n`n## Р—Р°РґР°С‡Рё`n- [ ] "
+    $content = "# Сессия: $date $time`n`n## Цель`n`n## Решения`n`n## Задачи`n- [ ] "
     Set-Content -Path $file -Value $content -Encoding UTF8
-    log "РЎРµСЃСЃРёСЏ: $file"
+    log "Сессия: $file"
     if (Get-Command "code" -ErrorAction SilentlyContinue) { code $file } else { notepad $file }
 }
 
@@ -58,4 +58,4 @@ elseif ($Push)    { Push-PKM }
 elseif ($Pull)    { Pull-PKM }
 elseif ($Backup)  { Backup-PKM }
 elseif ($Session) { New-Session }
-else { Write-Host "РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ: .\sync.ps1 -Setup | -Push | -Pull | -Backup | -Session" -ForegroundColor Cyan }
+else { Write-Host "Использование: .\sync.ps1 -Setup | -Push | -Pull | -Backup | -Session" -ForegroundColor Cyan }
